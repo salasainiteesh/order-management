@@ -17,15 +17,15 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @PostMapping
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order createdOrder = orderService.createOrder(order);
-        return ResponseEntity.ok(createdOrder);
-    }
-
     @GetMapping
     public ResponseEntity<List<Order>> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(orderService.getAllOrders());
+    }
+
+    // ✅ Ensure @RequestBody is present and method returns ResponseEntity
+    @PostMapping(consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
+        Order savedOrder = orderService.createOrder(order);
+        return ResponseEntity.ok(savedOrder);
     }
 }
