@@ -2,7 +2,7 @@ package com.example.orderservice.controller;
 
 import com.example.orderservice.model.Order;
 import com.example.orderservice.service.OrderService;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,21 +11,16 @@ import java.util.List;
 @RequestMapping("/api/orders")
 public class OrderController {
 
-    private final OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
+    @PostMapping
+    public Order createOrder(@RequestBody Order order) {
+        return orderService.createOrder(order);
     }
 
     @GetMapping
-    public ResponseEntity<List<Order>> getAllOrders() {
-        return ResponseEntity.ok(orderService.getAllOrders());
-    }
-
-    // ✅ Ensure @RequestBody is present and method returns ResponseEntity
-    @PostMapping(consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order) {
-        Order savedOrder = orderService.createOrder(order);
-        return ResponseEntity.ok(savedOrder);
+    public List<Order> getAllOrders() {
+        return orderService.getAllOrders();
     }
 }

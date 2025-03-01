@@ -1,48 +1,46 @@
 package com.example.orderservice.service;
 
+import com.example.orderservice.model.Inventory;
 import com.example.orderservice.model.Order;
 import com.example.orderservice.repository.OrderRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class OrderService {
 
-    private final OrderRepository orderRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
-    // ✅ Constructor Injection for Repository
-    public OrderService(OrderRepository orderRepository) {
-        this.orderRepository = orderRepository;
-    }
+    @Autowired
+    private InventoryService inventoryService;
 
-    // ✅ Create a new order
+    @Transactional
     public Order createOrder(Order order) {
-        return orderRepository.save(order);
-    }
 
-    // ✅ Fetch all orders
+        Optional<Inventory> inventoryOpt = inventoryService.getInventoryByProduct(order.getProductName());
+
+        if (inventoryOpt.isPresent()) {
+            Inventory inventory = inventoryOpt.get();
+
+            if (inventory.getQuantity() < order.getQuantity()) {
+                throw new RuntimeException("Insufficient stock for product: " + order.getProductName());
+            }
+
+
+            inventoryService.reduceInventory(order.getProductName(), order.getQuantity());
+
+
+            return orderRepository.save(order);
+        } else {
+            throw new RuntimeException("Product not found in inventory: " + order.getProductName());
+        }
+    }
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
-    }
-
-    // ✅ Fetch a single order by ID
-    public Optional<Order> getOrderById(Long id) {
-        return orderRepository.findById(id);
-    }
-
-    // ✅ Update an order
-    public Order updateOrder(Long id, Order orderDetails) {
-        return orderRepository.findById(id).map(order -> {
-            order.setName(orderDetails.getName());
-            order.setProductName(orderDetails.getProductName());
-            order.setQuantity(orderDetails.getQuantity());
-            return orderRepository.save(order);
-        }).orElseThrow(() -> new RuntimeException("Order not found with id " + id));
-    }
-
-    // ✅ Delete an order
-    public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
     }
 }

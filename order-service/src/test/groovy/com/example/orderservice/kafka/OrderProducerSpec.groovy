@@ -12,23 +12,23 @@ import static org.mockito.Mockito.*
 class OrderProducerSpec extends Specification {
 
     @MockBean
-    OrderProducer orderProducer // ✅ Correctly mock the OrderProducer
+    OrderProducer orderProducer
 
     @Autowired
-    OrderProducer serviceUnderTest // ✅ Autowire the service
+    OrderProducer serviceUnderTest
 
     def "should send an order message"() {
         given:
         def order = new Order(id: 1, name: "Test Order", productName: "Laptop", quantity: 1)
 
-        // ✅ Properly stub method before calling
+
         doNothing().when(orderProducer).sendOrderMessage(order)
 
         when:
         serviceUnderTest.sendOrderMessage(order)
 
         then:
-        noExceptionThrown() // ✅ Ensures that no exception occurs
-        verify(orderProducer, times(1)).sendOrderMessage(order) // ✅ Verifies execution
+        noExceptionThrown()
+        verify(orderProducer, times(1)).sendOrderMessage(order)
     }
 }

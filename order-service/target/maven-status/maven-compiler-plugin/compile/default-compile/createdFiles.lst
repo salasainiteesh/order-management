@@ -1,6 +1,10 @@
-com/example/orderservice/Application.class
 com/example/orderservice/kafka/OrderProducer.class
 com/example/orderservice/model/Order.class
-com/example/orderservice/controller/OrderController.class
+com/example/orderservice/repository/InventoryRepository.class
+com/example/orderservice/model/Inventory.class
 com/example/orderservice/service/OrderService.class
 com/example/orderservice/repository/OrderRepository.class
+com/example/orderservice/controller/InventoryController.class
+com/example/orderservice/service/InventoryService.class
+com/example/orderservice/Application.class
+com/example/orderservice/controller/OrderController.class

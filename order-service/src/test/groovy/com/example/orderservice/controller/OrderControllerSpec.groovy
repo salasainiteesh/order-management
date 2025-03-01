@@ -12,14 +12,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import static org.mockito.Mockito.*
 
-@WebMvcTest(OrderController) // ✅ Ensures correct Spring Boot test setup
+@WebMvcTest(OrderController)
 class OrderControllerSpec extends Specification {
 
     @Autowired
     MockMvc mockMvc
 
     @MockBean
-    OrderService orderService // ✅ Mock service layer
+    OrderService orderService
 
     def "POST /api/orders should create an order"() {
         given:

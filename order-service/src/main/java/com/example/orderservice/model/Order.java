@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "orders") // ✅ Change table name to avoid SQL conflict
+@Table(name = "orders")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,7 +15,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;  // ✅ Ensure this field exists if tests use it
-    private String productName;  // ✅ Ensure this matches test expectations
+    private String name;
+    private String productName;
     private int quantity;
 }
