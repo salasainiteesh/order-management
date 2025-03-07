@@ -3,7 +3,7 @@ package com.example.orderservice.service;
 import com.example.orderservice.model.Inventory;
 import com.example.orderservice.repository.InventoryRepository;
 import org.springframework.stereotype.Service;
-
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -16,20 +16,38 @@ public class InventoryService {
     }
 
     /**
-     * Get inventory by product name.
+     * Get inventory details for a product (case-insensitive).
      */
     public Optional<Inventory> getInventoryByProduct(String productName) {
-        return inventoryRepository.findByProductName(productName);
+        return inventoryRepository.findByProductNameIgnoreCase(productName);
     }
 
     /**
-     * Reduce inventory quantity after an order is placed.
+     * Increase inventory stock for a given product.
      */
-    public void reduceInventory(String productName, int quantity) {
-        Optional<Inventory> inventoryOpt = inventoryRepository.findByProductName(productName);
+    public void increaseInventory(String productName, int quantity) {
+        Optional<Inventory> inventoryOpt = inventoryRepository.findByProductNameIgnoreCase(productName);
 
         if (inventoryOpt.isPresent()) {
             Inventory inventory = inventoryOpt.get();
+            inventory.setQuantity(inventory.getQuantity() + quantity);
+            inventoryRepository.save(inventory);
+        } else {
+
+            // Option 2: Automatically create the product instead
+            Inventory newProduct = new Inventory(productName, quantity);
+            inventoryRepository.save(newProduct);
+        }
+    }
+
+
+    /**
+     * Reduce inventory stock for a given product.
+     */
+    public void reduceInventory(String productName, int quantity) {
+        Optional<Inventory> inventoryOptional = inventoryRepository.findByProductNameIgnoreCase(productName);
+        if (inventoryOptional.isPresent()) {
+            Inventory inventory = inventoryOptional.get();
             if (inventory.getQuantity() >= quantity) {
                 inventory.setQuantity(inventory.getQuantity() - quantity);
                 inventoryRepository.save(inventory);
@@ -37,24 +55,29 @@ public class InventoryService {
                 throw new RuntimeException("Not enough stock for product: " + productName);
             }
         } else {
-            throw new RuntimeException("Inventory not found for product: " + productName);
+            throw new RuntimeException("Product not found in inventory: " + productName);
         }
     }
 
     /**
-     * Increase inventory stock.
+     * Add a new product or update quantity if the product already exists.
      */
-    public void increaseInventory(String productName, int quantity) {
-        Optional<Inventory> inventoryOpt = inventoryRepository.findByProductName(productName);
-
-        if (inventoryOpt.isPresent()) {
-            Inventory inventory = inventoryOpt.get();
-            inventory.setQuantity(inventory.getQuantity() + quantity);
-            inventoryRepository.save(inventory);
+    public Inventory addProduct(String productName, int quantity) {
+        Optional<Inventory> existingProduct = inventoryRepository.findByProductNameIgnoreCase(productName);
+        if (existingProduct.isPresent()) {
+            Inventory product = existingProduct.get();
+            product.setQuantity(product.getQuantity() + quantity); // Increase quantity
+            return inventoryRepository.save(product);
         } else {
-            Inventory newInventory = new Inventory(productName, quantity);
-            inventoryRepository.save(newInventory);
+            Inventory newProduct = new Inventory(productName, quantity);
+            return inventoryRepository.save(newProduct);
         }
     }
 
+    /**
+     * Get the full list of inventory.
+     */
+    public List<Inventory> getAllInventory() {
+        return inventoryRepository.findAll();
+    }
 }

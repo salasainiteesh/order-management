@@ -23,12 +23,12 @@ public class OrderProducer {
      * Sends an order message to Kafka after checking inventory.
      */
     public void sendOrderMessage(Order order) {
-        // ✅ Correctly unwrap Optional<Inventory> before using
+
         Optional<Inventory> inventoryOpt = inventoryService.getInventoryByProduct(order.getProductName());
 
         if (inventoryOpt.isPresent()) {
             Inventory inventory = inventoryOpt.get();
-            int availableQuantity = inventory.getQuantity(); // ✅ Now it's an int
+            int availableQuantity = inventory.getQuantity();
 
             if (availableQuantity >= order.getQuantity()) {
                 kafkaTemplate.send("order-topic", order);

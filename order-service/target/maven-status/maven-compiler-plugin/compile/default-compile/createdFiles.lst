@@ -1,6 +1,8 @@
 com/example/orderservice/kafka/OrderProducer.class
+com/example/orderservice/CorsConfig.class
 com/example/orderservice/model/Order.class
 com/example/orderservice/repository/InventoryRepository.class
+com/example/orderservice/CorsConfig$1.class
 com/example/orderservice/model/Inventory.class
 com/example/orderservice/service/OrderService.class
 com/example/orderservice/repository/OrderRepository.class

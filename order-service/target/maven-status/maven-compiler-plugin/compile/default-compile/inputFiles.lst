@@ -1,4 +1,5 @@
 /Users/sainiteeshsala/Documents/new/order-management/order-service/src/main/java/com/example/orderservice/Application.java
+/Users/sainiteeshsala/Documents/new/order-management/order-service/src/main/java/com/example/orderservice/CorsConfig.java
 /Users/sainiteeshsala/Documents/new/order-management/order-service/src/main/java/com/example/orderservice/controller/InventoryController.java
 /Users/sainiteeshsala/Documents/new/order-management/order-service/src/main/java/com/example/orderservice/controller/OrderController.java
 /Users/sainiteeshsala/Documents/new/order-management/order-service/src/main/java/com/example/orderservice/kafka/OrderProducer.java
